@@ -18,6 +18,15 @@ function App() {
       .then((r) => (r.ok ? r.json() : Promise.reject(r.status)))
       .then((d) => setApiStatus(d.status ?? 'ok'))
       .catch(() => setApiStatus('unreachable'))
+
+    fetch(`${base}/api/track`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        path: window.location.pathname,
+        referrer: document.referrer,
+      }),
+    }).catch(() => {})
   }, [])
 
   return (
