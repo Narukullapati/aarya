@@ -1,4 +1,8 @@
 #!/usr/bin/env bash
+# LEGACY — aarya.narukullapati.com now resolves to the VPS (Traefik + Docker),
+# so uploading to Hostinger shared hosting no longer affects the live site.
+# Kept in case a static deploy to the shared host is ever needed again.
+#
 # Deploy the React UI to aarya.narukullapati.com (Hostinger static site).
 # Requires HOSTINGER_API_TOKEN — generate one in hPanel -> Profile -> API.
 set -euo pipefail
