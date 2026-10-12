@@ -17,3 +17,12 @@ services:
       - "8080:80"
     depends_on:
       - api
+
+  # Fallback maintenance page — Traefik routes to it only when the ui router
+  # disappears (container down during a deploy): lower router priority.
+  maintenance:
+    image: nginx:alpine
+    volumes:
+      - ./UI/maintenance:/usr/share/nginx/html:ro
+      - ./UI/nginx-maintenance.conf:/etc/nginx/conf.d/default.conf:ro
+    restart: unless-stopped
