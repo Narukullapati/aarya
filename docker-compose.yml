@@ -10,6 +10,9 @@ services:
       - DB_USER=${DB_USER:?set DB_USER in .env}
       - DB_PASSWORD=${DB_PASSWORD:?set DB_PASSWORD in .env}
       - AUDIT_ADMIN_TOKEN=${AUDIT_ADMIN_TOKEN:-}
+      - UPLOAD_DIR=/app/uploads
+    volumes:
+      - uploads:/app/uploads
 
   ui:
     build: ./UI
@@ -26,3 +29,6 @@ services:
       - ./UI/maintenance:/usr/share/nginx/html:ro
       - ./UI/nginx-maintenance.conf:/etc/nginx/conf.d/default.conf:ro
     restart: unless-stopped
+
+volumes:
+  uploads:

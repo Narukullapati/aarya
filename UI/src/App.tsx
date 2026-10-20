@@ -5,8 +5,7 @@ import { SiteHeader } from './components/SiteHeader'
 import { SiteFooter } from './components/SiteFooter'
 import { Home } from './pages/Home'
 import { WorkPage } from './pages/WorkPage'
-
-const API_BASE: string = import.meta.env.VITE_API_BASE_URL ?? ''
+import { API_BASE } from './api'
 
 function Shell() {
   const location = useLocation()
@@ -36,28 +35,49 @@ function Shell() {
   }, [location.pathname])
 
   return (
-    <div className="wrap">
-      <SiteHeader />
-      <main>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route
-            path="/fine-art"
-            element={<WorkPage title="fine art" note="selected works" />}
-          />
-          <Route
-            path="/design-projects"
-            element={<WorkPage title="design projects" note="process & output" />}
-          />
-          <Route
-            path="/photography"
-            element={<WorkPage title="photography" note="frames & studies" />}
-          />
-          <Route path="*" element={<Home />} />
-        </Routes>
-      </main>
-      <SiteFooter apiStatus={apiStatus} />
-    </div>
+    <>
+      <div className="honeycomb" aria-hidden="true" />
+      <div className="wrap">
+        <SiteHeader />
+        <main>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route
+              path="/fine-art"
+              element={
+                <WorkPage
+                  title="fine art"
+                  note="selected works"
+                  category="fine-art"
+                />
+              }
+            />
+            <Route
+              path="/design-projects"
+              element={
+                <WorkPage
+                  title="design projects"
+                  note="process & output"
+                  category="design-projects"
+                />
+              }
+            />
+            <Route
+              path="/photography"
+              element={
+                <WorkPage
+                  title="photography"
+                  note="frames & studies"
+                  category="photography"
+                />
+              }
+            />
+            <Route path="*" element={<Home />} />
+          </Routes>
+        </main>
+        <SiteFooter apiStatus={apiStatus} />
+      </div>
+    </>
   )
 }
 

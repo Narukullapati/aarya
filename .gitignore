@@ -14,6 +14,9 @@ venv/
 .env.*
 !.env.production
 
+# Uploaded images (dev)
+uploads/
+
 # OS / editor
 .DS_Store
 Thumbs.db

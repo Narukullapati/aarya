@@ -23,11 +23,15 @@ export function SiteFooter({ apiStatus }: { apiStatus: string }) {
       <div className="footer-grid">
         <div className="footer-contact">
           <p className="label">contact</p>
-          <a href="mailto:hello@aarya.narukullapati.com">
-            <span>hello@aarya.narukullapati.com</span>
+          <a href="mailto:aarya.schs@gmail.com">
+            <span>aarya.schs@gmail.com</span>
             <MailIcon />
           </a>
-          <a href="#" onClick={(e) => e.preventDefault()}>
+          <a
+            href="https://www.instagram.com/monophobic.png/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             <span>instagram</span>
             <InstagramIcon />
           </a>
