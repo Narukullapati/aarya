@@ -41,3 +41,30 @@ export async function deleteImage(id: number): Promise<void> {
   const r = await fetch(`${API_BASE}/api/images/${id}`, { method: 'DELETE' })
   if (!r.ok) throw new Error(await detail(r))
 }
+
+export interface TextPost {
+  id: number
+  ts: string
+  body: string
+}
+
+export async function listPosts(): Promise<TextPost[]> {
+  const r = await fetch(`${API_BASE}/api/posts`)
+  if (!r.ok) throw new Error(await detail(r))
+  return (await r.json()).posts
+}
+
+export async function createPost(text: string): Promise<TextPost> {
+  const r = await fetch(`${API_BASE}/api/posts`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ text }),
+  })
+  if (!r.ok) throw new Error(await detail(r))
+  return r.json()
+}
+
+export async function deletePost(id: number): Promise<void> {
+  const r = await fetch(`${API_BASE}/api/posts/${id}`, { method: 'DELETE' })
+  if (!r.ok) throw new Error(await detail(r))
+}

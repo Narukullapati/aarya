@@ -5,6 +5,7 @@ import { SiteHeader } from './components/SiteHeader'
 import { SiteFooter } from './components/SiteFooter'
 import { Home } from './pages/Home'
 import { WorkPage } from './pages/WorkPage'
+import { TextPage } from './pages/TextPage'
 import { API_BASE } from './api'
 
 function Shell() {
@@ -65,11 +66,7 @@ function Shell() {
             <Route
               path="/photography"
               element={
-                <WorkPage
-                  title="photography"
-                  note="frames & studies"
-                  category="photography"
-                />
+                <TextPage title="the human error log" note="public entries" />
               }
             />
             <Route path="*" element={<Home />} />

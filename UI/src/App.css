@@ -563,6 +563,40 @@ main {
   opacity: 1;
 }
 
+/* ---------- text posts ---------- */
+
+.post-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.post-entry {
+  border: 1px solid var(--primary);
+  padding: 16px;
+  font-family: var(--mono);
+  font-weight: 300;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--primary);
+}
+.post-entry p {
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+.post-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 12px;
+  font-size: 11px;
+  opacity: 0.6;
+}
+.tile-delete.post-delete {
+  position: static;
+  opacity: 1;
+  flex-shrink: 0;
+}
+
 /* ---------- lightbox ---------- */
 
 .lightbox {

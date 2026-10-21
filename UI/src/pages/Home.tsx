@@ -1,8 +1,8 @@
 const ANNOTATIONS = [
   { left: 528, top: 75, barW: 88, boxW: 161, solid: false, text: 'Aarya' },
-  { left: 202, top: 172, barW: 71, boxW: 129, solid: true, text: 'image as structure' },
-  { left: 274, top: 478, barW: 68, boxW: 140, solid: false, text: 'work with design, code and interfaces' },
-  { left: 542, top: 465, barW: 88, boxW: 161, solid: false, text: 'experiments in visual language' },
+  { left: 202, top: 172, barW: 71, boxW: 129, solid: true, text: 'The Greatest Thief Of All Time Is Ambition' },
+  { left: 274, top: 478, barW: 68, boxW: 140, solid: false, text: 'THE ARCHIVED HUMAN' },
+  { left: 542, top: 465, barW: 88, boxW: 161, solid: false, text: 'ERROR 404: EDEN' },
 ]
 
 const LINES = [
@@ -25,23 +25,18 @@ export function Home() {
           </div>
           <div className="hero-title">
             <div className="fade">
-              <p className="tag">
-                graphic design, imagery,
-                <br />
-                visual projects
-              </p>
+              <p className="tag">Heaven Has No Backup</p>
             </div>
             <h1>
-              AARYA
+              AN INDEX
               <br />
-              PORTFOLIO
+              FOR THE LOST
             </h1>
           </div>
           <div className="hero-desc">
             <p>
-              This space collects work in design, code and visual experiments.
-              The projects reflect an approach based on the balance of idea
-              and form — each piece viewed as part of a broader process.
+              The Higher You Soar The Smaller You Appear To Those Who Cannot
+              Fly
             </p>
           </div>
           {ANNOTATIONS.map((a, i) => (
@@ -78,15 +73,11 @@ export function Home() {
       </section>
 
       <section className="hero-mobile">
-        <p className="tag">
-          graphic design, imagery,
-          <br />
-          visual projects
-        </p>
+        <p className="tag">Heaven Has No Backup</p>
         <h1>
-          AARYA
+          AN INDEX
           <br />
-          PORTFOLIO
+          FOR THE LOST
         </h1>
         <div className="m-photo">portrait</div>
         <div className="m-annotations">
@@ -98,9 +89,7 @@ export function Home() {
           ))}
         </div>
         <p className="desc">
-          This space collects work in design, code and visual experiments. The
-          projects reflect an approach based on the balance of idea and form —
-          each piece viewed as part of a broader process.
+          The Higher You Soar The Smaller You Appear To Those Who Cannot Fly
         </p>
       </section>
     </>

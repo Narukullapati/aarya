@@ -16,6 +16,16 @@ CREATE TABLE IF NOT EXISTS visits (
 )
 """
 
+POSTS_SCHEMA = """
+CREATE TABLE IF NOT EXISTS posts (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    ts TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    body TEXT,
+    ip VARCHAR(45),
+    INDEX idx_posts_ts (ts)
+)
+"""
+
 IMAGES_SCHEMA = """
 CREATE TABLE IF NOT EXISTS images (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -49,6 +59,7 @@ def init_db():
     with _connect() as conn, conn.cursor() as cur:
         cur.execute(SCHEMA)
         cur.execute(IMAGES_SCHEMA)
+        cur.execute(POSTS_SCHEMA)
 
 
 def record_visit(ip, user_agent, path, referrer, accept_language):
@@ -115,6 +126,40 @@ def count_recent_images_by_ip(ip):
     with _connect() as conn, conn.cursor() as cur:
         cur.execute(
             "SELECT COUNT(*) AS n FROM images WHERE ip = %s AND ts > NOW() - INTERVAL 1 HOUR",
+            (ip,),
+        )
+        return cur.fetchone()["n"]
+
+
+def list_posts():
+    with _connect() as conn, conn.cursor() as cur:
+        cur.execute("SELECT id, ts, body FROM posts ORDER BY id DESC")
+        return cur.fetchall()
+
+
+def add_post(body, ip):
+    with _connect() as conn, conn.cursor() as cur:
+        cur.execute("INSERT INTO posts (body, ip) VALUES (%s, %s)", (body, ip))
+        post_id = cur.lastrowid
+        cur.execute("SELECT id, ts, body FROM posts WHERE id = %s", (post_id,))
+        return cur.fetchone()
+
+
+def get_post(post_id):
+    with _connect() as conn, conn.cursor() as cur:
+        cur.execute("SELECT id FROM posts WHERE id = %s", (post_id,))
+        return cur.fetchone()
+
+
+def delete_post(post_id):
+    with _connect() as conn, conn.cursor() as cur:
+        cur.execute("DELETE FROM posts WHERE id = %s", (post_id,))
+
+
+def count_recent_posts_by_ip(ip):
+    with _connect() as conn, conn.cursor() as cur:
+        cur.execute(
+            "SELECT COUNT(*) AS n FROM posts WHERE ip = %s AND ts > NOW() - INTERVAL 1 HOUR",
             (ip,),
         )
         return cur.fetchone()["n"]

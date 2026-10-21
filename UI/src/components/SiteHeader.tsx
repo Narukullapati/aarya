@@ -3,7 +3,7 @@ import { Link, NavLink } from 'react-router-dom'
 const NAV = [
   { label: 'fine art', to: '/fine-art' },
   { label: 'design projects', to: '/design-projects' },
-  { label: 'photography', to: '/photography' },
+  { label: 'the human error log', to: '/photography' },
 ]
 
 export function SiteHeader() {

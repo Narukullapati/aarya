@@ -10,12 +10,17 @@ from pydantic import BaseModel
 
 from db import (
     add_image,
+    add_post,
     count_images,
     count_recent_images_by_ip,
+    count_recent_posts_by_ip,
     delete_image,
+    delete_post,
     get_image,
+    get_post,
     init_db,
     list_images,
+    list_posts,
     list_visits,
     record_visit,
 )
@@ -26,11 +31,14 @@ UPLOAD_DIR = Path(os.environ.get("UPLOAD_DIR", "uploads"))
 UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
 
 CATEGORIES = {"fine-art", "design-projects", "photography"}
-MAX_UPLOAD_BYTES = 8 * 1024 * 1024
+MAX_UPLOAD_BYTES = 15 * 1024 * 1024
 MAX_IMAGES_TOTAL = 500
 MAX_UPLOADS_PER_IP_HOUR = 20
 MAX_CAPTION_WORDS = 100
 MAX_CAPTION_CHARS = 2000
+MAX_POST_WORDS = 500
+MAX_POST_CHARS = 4000
+MAX_POSTS_PER_IP_HOUR = 20
 
 
 @asynccontextmanager
@@ -141,7 +149,7 @@ async def upload_image(
 
     data = await file.read(MAX_UPLOAD_BYTES + 1)
     if len(data) > MAX_UPLOAD_BYTES:
-        raise HTTPException(status_code=413, detail="file too large (max 8 MB)")
+        raise HTTPException(status_code=413, detail="file too large (max 15 MB)")
     ext = _sniff_ext(data[:16])
     if not ext:
         raise HTTPException(status_code=415, detail="unsupported image type")
@@ -161,3 +169,36 @@ def remove_image(image_id: int):
         (UPLOAD_DIR / row["filename"]).unlink()
     except OSError:
         pass
+
+
+class PostIn(BaseModel):
+    text: str
+
+
+@app.get("/api/posts")
+def posts():
+    return {"posts": list_posts()}
+
+
+@app.post("/api/posts", status_code=201)
+def create_post(
+    body: PostIn,
+    request: Request,
+    x_forwarded_for: str | None = Header(None),
+):
+    text = body.text.strip()[:MAX_POST_CHARS]
+    if not text:
+        raise HTTPException(status_code=422, detail="empty post")
+    if len(text.split()) > MAX_POST_WORDS:
+        raise HTTPException(status_code=422, detail="post exceeds 500 words")
+    ip = _client_ip(request, x_forwarded_for)
+    if ip and count_recent_posts_by_ip(ip) >= MAX_POSTS_PER_IP_HOUR:
+        raise HTTPException(status_code=429, detail="too many posts, try later")
+    return add_post(text, ip)
+
+
+@app.delete("/api/posts/{post_id}", status_code=204)
+def remove_post(post_id: int):
+    if not get_post(post_id):
+        raise HTTPException(status_code=404, detail="post not found")
+    delete_post(post_id)
