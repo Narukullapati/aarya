@@ -1,5 +1,5 @@
 const ANNOTATIONS = [
-  { left: 528, top: 75, barW: 88, boxW: 161, solid: false, text: 'Aarya' },
+  { left: 528, top: 75, barW: 88, boxW: 161, solid: false, text: 'Pioneer of lying' },
   { left: 202, top: 172, barW: 71, boxW: 129, solid: true, text: 'The Greatest Thief Of All Time Is Ambition' },
   { left: 274, top: 478, barW: 68, boxW: 140, solid: false, text: 'THE ARCHIVED HUMAN' },
   { left: 542, top: 465, barW: 88, boxW: 161, solid: false, text: 'ERROR 404: EDEN' },
