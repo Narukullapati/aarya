@@ -1,3 +1,5 @@
+import { SiteTimer } from '../components/SiteTimer'
+
 const ANNOTATIONS = [
   { left: 528, top: 75, barW: 88, boxW: 161, solid: false, text: 'Pioneer of lying' },
   { left: 202, top: 172, barW: 71, boxW: 129, solid: true, text: 'The Greatest Thief Of All Time Is Ambition' },
@@ -92,6 +94,8 @@ export function Home() {
           The Higher You Soar The Smaller You Appear To Those Who Cannot Fly
         </p>
       </section>
+
+      <SiteTimer />
     </>
   )
 }

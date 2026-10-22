@@ -5,7 +5,13 @@ import {
   type FormEvent,
   type MouseEvent,
 } from 'react'
-import { createPost, deletePost, listPosts, type TextPost } from '../api'
+import {
+  createPost,
+  deletePost,
+  fmtEst,
+  listPosts,
+  type TextPost,
+} from '../api'
 
 const MAX_WORDS = 500
 const wordCount = (s: string) => (s.trim() ? s.trim().split(/\s+/).length : 0)
@@ -97,7 +103,7 @@ export function TextPage({ title, note }: { title: string; note: string }) {
             <div key={p.id} className="post-entry">
               <p>{p.body}</p>
               <div className="post-meta">
-                <span>{new Date(p.ts).toLocaleString()}</span>
+                <span>{fmtEst(p.ts_ms)}</span>
                 <button
                   className="tile-delete post-delete"
                   onClick={(e) => remove(p.id, e)}

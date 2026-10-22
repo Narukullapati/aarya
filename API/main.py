@@ -1,4 +1,5 @@
 import os
+import time
 import uuid
 from contextlib import asynccontextmanager
 from pathlib import Path
@@ -11,6 +12,7 @@ from pydantic import BaseModel
 from db import (
     add_image,
     add_post,
+    clear_timer,
     count_images,
     count_recent_images_by_ip,
     count_recent_posts_by_ip,
@@ -18,14 +20,17 @@ from db import (
     delete_post,
     get_image,
     get_post,
+    get_timer,
     init_db,
     list_images,
     list_posts,
     list_visits,
     record_visit,
+    set_timer,
 )
 
 AUDIT_ADMIN_TOKEN = os.environ.get("AUDIT_ADMIN_TOKEN")
+EDIT_TOKEN = os.environ.get("EDIT_TOKEN")
 
 UPLOAD_DIR = Path(os.environ.get("UPLOAD_DIR", "uploads"))
 UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
@@ -87,6 +92,11 @@ def _with_url(row: dict) -> dict:
     return {**row, "url": f"/api/uploads/{row['filename']}"}
 
 
+def _require_edit(x_edit_token: str | None):
+    if EDIT_TOKEN and x_edit_token != EDIT_TOKEN:
+        raise HTTPException(status_code=401, detail="invalid password")
+
+
 @app.get("/api/health")
 def health():
     return {"status": "ok"}
@@ -134,7 +144,9 @@ async def upload_image(
     caption: str = Form(""),
     category: str = Form(""),
     x_forwarded_for: str | None = Header(None),
+    x_edit_token: str | None = Header(None),
 ):
+    _require_edit(x_edit_token)
     if category not in CATEGORIES:
         raise HTTPException(status_code=400, detail="unknown category")
     caption = caption.strip()[:MAX_CAPTION_CHARS]
@@ -160,7 +172,8 @@ async def upload_image(
 
 
 @app.delete("/api/images/{image_id}", status_code=204)
-def remove_image(image_id: int):
+def remove_image(image_id: int, x_edit_token: str | None = Header(None)):
+    _require_edit(x_edit_token)
     row = get_image(image_id)
     if not row:
         raise HTTPException(status_code=404, detail="image not found")
@@ -185,7 +198,9 @@ def create_post(
     body: PostIn,
     request: Request,
     x_forwarded_for: str | None = Header(None),
+    x_edit_token: str | None = Header(None),
 ):
+    _require_edit(x_edit_token)
     text = body.text.strip()[:MAX_POST_CHARS]
     if not text:
         raise HTTPException(status_code=422, detail="empty post")
@@ -198,7 +213,37 @@ def create_post(
 
 
 @app.delete("/api/posts/{post_id}", status_code=204)
-def remove_post(post_id: int):
+def remove_post(post_id: int, x_edit_token: str | None = Header(None)):
+    _require_edit(x_edit_token)
     if not get_post(post_id):
         raise HTTPException(status_code=404, detail="post not found")
     delete_post(post_id)
+
+
+class TimerIn(BaseModel):
+    label: str = ""
+
+
+@app.get("/api/timer")
+def timer():
+    row = get_timer()
+    if not row:
+        return {"running": False}
+    return {
+        "running": True,
+        "label": row["label"],
+        "started_at_ms": int(row["started_at_ms"]),
+    }
+
+
+@app.post("/api/timer", status_code=201)
+def start_timer(body: TimerIn, x_edit_token: str | None = Header(None)):
+    _require_edit(x_edit_token)
+    set_timer(body.label.strip()[:200], int(time.time() * 1000))
+    return timer()
+
+
+@app.delete("/api/timer", status_code=204)
+def stop_timer(x_edit_token: str | None = Header(None)):
+    _require_edit(x_edit_token)
+    clear_timer()

@@ -1,4 +1,5 @@
 import { Link, NavLink } from 'react-router-dom'
+import logoArch from '../assets/logo-arch.png'
 
 const NAV = [
   { label: 'fine art', to: '/fine-art' },
@@ -10,7 +11,7 @@ export function SiteHeader() {
   return (
     <header className="site-header">
       <Link to="/" className="logo" aria-label="aarya home">
-        <span className="logo-box">A</span>
+        <img className="logo-img" src={logoArch} alt="" />
       </Link>
       <nav className="site-nav">
         {NAV.map((n) => (

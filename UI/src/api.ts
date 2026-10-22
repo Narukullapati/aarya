@@ -17,6 +17,45 @@ async function detail(r: Response): Promise<string> {
   return (d && typeof d.detail === 'string' && d.detail) || `request failed: ${r.status}`
 }
 
+const TOKEN_KEY = 'aarya-edit-token'
+
+export function getEditToken(): string {
+  let t = sessionStorage.getItem(TOKEN_KEY)
+  if (t === null) {
+    t = window.prompt('password') ?? ''
+    sessionStorage.setItem(TOKEN_KEY, t)
+  }
+  return t
+}
+
+export function clearEditToken() {
+  sessionStorage.removeItem(TOKEN_KEY)
+}
+
+function editHeaders(): Record<string, string> {
+  return { 'X-Edit-Token': getEditToken() }
+}
+
+async function checkEdit(r: Response) {
+  if (r.status === 401) {
+    clearEditToken()
+    throw new Error('wrong password')
+  }
+  if (!r.ok) throw new Error(await detail(r))
+}
+
+export function fmtEst(ms: number): string {
+  return new Date(ms).toLocaleString('en-US', {
+    timeZone: 'America/New_York',
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric',
+    hour: 'numeric',
+    minute: '2-digit',
+    timeZoneName: 'short',
+  })
+}
+
 export async function listImages(category: string): Promise<GalleryImage[]> {
   const r = await fetch(`${API_BASE}/api/images?category=${encodeURIComponent(category)}`)
   if (!r.ok) throw new Error(await detail(r))
@@ -32,19 +71,27 @@ export async function uploadImage(
   fd.append('category', category)
   fd.append('caption', caption)
   fd.append('file', file)
-  const r = await fetch(`${API_BASE}/api/images`, { method: 'POST', body: fd })
-  if (!r.ok) throw new Error(await detail(r))
+  const r = await fetch(`${API_BASE}/api/images`, {
+    method: 'POST',
+    headers: editHeaders(),
+    body: fd,
+  })
+  await checkEdit(r)
   return r.json()
 }
 
 export async function deleteImage(id: number): Promise<void> {
-  const r = await fetch(`${API_BASE}/api/images/${id}`, { method: 'DELETE' })
-  if (!r.ok) throw new Error(await detail(r))
+  const r = await fetch(`${API_BASE}/api/images/${id}`, {
+    method: 'DELETE',
+    headers: editHeaders(),
+  })
+  await checkEdit(r)
 }
 
 export interface TextPost {
   id: number
   ts: string
+  ts_ms: number
   body: string
 }
 
@@ -57,14 +104,47 @@ export async function listPosts(): Promise<TextPost[]> {
 export async function createPost(text: string): Promise<TextPost> {
   const r = await fetch(`${API_BASE}/api/posts`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: { 'Content-Type': 'application/json', ...editHeaders() },
     body: JSON.stringify({ text }),
   })
-  if (!r.ok) throw new Error(await detail(r))
+  await checkEdit(r)
   return r.json()
 }
 
 export async function deletePost(id: number): Promise<void> {
-  const r = await fetch(`${API_BASE}/api/posts/${id}`, { method: 'DELETE' })
+  const r = await fetch(`${API_BASE}/api/posts/${id}`, {
+    method: 'DELETE',
+    headers: editHeaders(),
+  })
+  await checkEdit(r)
+}
+
+export interface TimerState {
+  running: boolean
+  label?: string
+  started_at_ms?: number
+}
+
+export async function getTimer(): Promise<TimerState> {
+  const r = await fetch(`${API_BASE}/api/timer`)
   if (!r.ok) throw new Error(await detail(r))
+  return r.json()
+}
+
+export async function startTimer(label: string): Promise<TimerState> {
+  const r = await fetch(`${API_BASE}/api/timer`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...editHeaders() },
+    body: JSON.stringify({ label }),
+  })
+  await checkEdit(r)
+  return r.json()
+}
+
+export async function stopTimer(): Promise<void> {
+  const r = await fetch(`${API_BASE}/api/timer`, {
+    method: 'DELETE',
+    headers: editHeaders(),
+  })
+  await checkEdit(r)
 }

@@ -10,6 +10,7 @@ services:
       - DB_USER=${DB_USER:?set DB_USER in .env}
       - DB_PASSWORD=${DB_PASSWORD:?set DB_PASSWORD in .env}
       - AUDIT_ADMIN_TOKEN=${AUDIT_ADMIN_TOKEN:-}
+      - EDIT_TOKEN=${EDIT_TOKEN:-}
       - UPLOAD_DIR=/app/uploads
     volumes:
       - uploads:/app/uploads

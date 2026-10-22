@@ -39,6 +39,14 @@ CREATE TABLE IF NOT EXISTS images (
 )
 """
 
+TIMER_SCHEMA = """
+CREATE TABLE IF NOT EXISTS timer (
+    id TINYINT PRIMARY KEY,
+    label VARCHAR(200) NOT NULL DEFAULT '',
+    started_at_ms BIGINT NOT NULL
+)
+"""
+
 COLUMNS = "id, ts, ip, user_agent, path, referrer, accept_language"
 
 
@@ -60,6 +68,7 @@ def init_db():
         cur.execute(SCHEMA)
         cur.execute(IMAGES_SCHEMA)
         cur.execute(POSTS_SCHEMA)
+        cur.execute(TIMER_SCHEMA)
 
 
 def record_visit(ip, user_agent, path, referrer, accept_language):
@@ -133,7 +142,9 @@ def count_recent_images_by_ip(ip):
 
 def list_posts():
     with _connect() as conn, conn.cursor() as cur:
-        cur.execute("SELECT id, ts, body FROM posts ORDER BY id DESC")
+        cur.execute(
+            "SELECT id, ts, CAST(UNIX_TIMESTAMP(ts)*1000 AS UNSIGNED) AS ts_ms, body FROM posts ORDER BY id DESC"
+        )
         return cur.fetchall()
 
 
@@ -163,3 +174,23 @@ def count_recent_posts_by_ip(ip):
             (ip,),
         )
         return cur.fetchone()["n"]
+
+
+def get_timer():
+    with _connect() as conn, conn.cursor() as cur:
+        cur.execute("SELECT label, started_at_ms FROM timer WHERE id = 1")
+        return cur.fetchone()
+
+
+def set_timer(label, started_at_ms):
+    with _connect() as conn, conn.cursor() as cur:
+        cur.execute(
+            "INSERT INTO timer (id, label, started_at_ms) VALUES (1, %s, %s) "
+            "ON DUPLICATE KEY UPDATE label = VALUES(label), started_at_ms = VALUES(started_at_ms)",
+            (label, started_at_ms),
+        )
+
+
+def clear_timer():
+    with _connect() as conn, conn.cursor() as cur:
+        cur.execute("DELETE FROM timer WHERE id = 1")
