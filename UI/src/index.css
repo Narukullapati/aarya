@@ -5,8 +5,8 @@
 }
 
 body {
-  background: #000;
-  color: #16a34a;
+  background: var(--main);
+  color: var(--primary);
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   min-height: 100vh;
 }

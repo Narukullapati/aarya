@@ -5,13 +5,21 @@ const NAV = [
   { label: 'fine art', to: '/fine-art' },
   { label: 'design projects', to: '/design-projects' },
   { label: 'the human error log', to: '/photography' },
+  { label: 'misc', to: '/misc' },
 ]
 
 export function SiteHeader() {
   return (
     <header className="site-header">
       <Link to="/" className="logo" aria-label="aarya home">
-        <img className="logo-img" src={logoArch} alt="" />
+        <span
+          className="logo-img"
+          role="img"
+          style={{
+            WebkitMaskImage: `url(${logoArch})`,
+            maskImage: `url(${logoArch})`,
+          }}
+        />
       </Link>
       <nav className="site-nav">
         {NAV.map((n) => (

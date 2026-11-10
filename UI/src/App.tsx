@@ -6,11 +6,18 @@ import { SiteFooter } from './components/SiteFooter'
 import { Home } from './pages/Home'
 import { WorkPage } from './pages/WorkPage'
 import { TextPage } from './pages/TextPage'
+import { MiscPage } from './pages/MiscPage'
+import { QuizPage } from './pages/QuizPage'
 import { API_BASE } from './api'
+import { initTheme } from './theme'
 
 function Shell() {
   const location = useLocation()
   const [apiStatus, setApiStatus] = useState('checking…')
+
+  useEffect(() => {
+    initTheme()
+  }, [])
 
   useEffect(() => {
     if (!API_BASE) {
@@ -69,6 +76,8 @@ function Shell() {
                 <TextPage title="the human error log" note="public entries" />
               }
             />
+            <Route path="/misc" element={<MiscPage />} />
+            <Route path="/quiz" element={<QuizPage />} />
             <Route path="*" element={<Home />} />
           </Routes>
         </main>

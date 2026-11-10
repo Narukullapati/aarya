@@ -1,5 +1,7 @@
 import { SiteTimer } from '../components/SiteTimer'
 
+const WIP = 'WORK IN PROGRESS\u00a0\u00a0//\u00a0\u00a0'
+
 const ANNOTATIONS = [
   { left: 528, top: 75, barW: 88, boxW: 161, solid: false, text: 'Pioneer of lying' },
   { left: 202, top: 172, barW: 71, boxW: 129, solid: true, text: 'The Greatest Thief Of All Time Is Ambition' },
@@ -20,7 +22,14 @@ export function Home() {
       <section className="hero">
         <div className="hero-stage">
           <div className="hero-photo">
-            <div className="ph">portrait</div>
+            <div className="ph" />
+          </div>
+          <div className="wip-bar">
+            <div className="wip-track">
+              {Array.from({ length: 16 }, (_, i) => (
+                <span key={i}>{WIP}</span>
+              ))}
+            </div>
           </div>
           <div className="hero-bg">
             <div className="ph" />
@@ -64,10 +73,10 @@ export function Home() {
                   y1={l.y1}
                   x2={l.x2}
                   y2={l.y2}
-                  stroke="#16A34A"
+                  stroke="currentColor"
                   strokeWidth="1"
                 />
-                <circle cx={l.x2} cy={l.y2} r="2.67" fill="#16A34A" />
+                <circle cx={l.x2} cy={l.y2} r="2.67" fill="currentColor" />
               </g>
             ))}
           </svg>
@@ -81,7 +90,16 @@ export function Home() {
           <br />
           FOR THE LOST
         </h1>
-        <div className="m-photo">portrait</div>
+        <div className="m-photo-wrap">
+          <div className="m-photo" />
+          <div className="wip-bar">
+            <div className="wip-track">
+              {Array.from({ length: 16 }, (_, i) => (
+                <span key={i}>{WIP}</span>
+              ))}
+            </div>
+          </div>
+        </div>
         <div className="m-annotations">
           {ANNOTATIONS.map((a, i) => (
             <div key={i}>
