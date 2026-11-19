@@ -1,35 +1,33 @@
+import { useEffect, useState } from 'react'
 import { SiteTimer } from '../components/SiteTimer'
-
-const WIP = 'WORK IN PROGRESS\u00a0\u00a0//\u00a0\u00a0'
-
-const ANNOTATIONS = [
-  { left: 528, top: 75, barW: 88, boxW: 161, solid: false, text: 'Pioneer of lying' },
-  { left: 202, top: 172, barW: 71, boxW: 129, solid: true, text: 'The Greatest Thief Of All Time Is Ambition' },
-  { left: 274, top: 478, barW: 68, boxW: 140, solid: false, text: 'THE ARCHIVED HUMAN' },
-  { left: 542, top: 465, barW: 88, boxW: 161, solid: false, text: 'ERROR 404: EDEN' },
-]
-
-const LINES = [
-  { x1: 528, y1: 136, x2: 426, y2: 188 },
-  { x1: 331, y1: 229, x2: 388, y2: 263 },
-  { x1: 341, y1: 478, x2: 394, y2: 402 },
-  { x1: 542, y1: 465, x2: 482, y2: 416 },
-]
+import { imageUrl, listImages, type GalleryImage } from '../api'
 
 export function Home() {
+  const [art, setArt] = useState<GalleryImage | null>(null)
+
+  useEffect(() => {
+    listImages('fine-art')
+      .then((imgs) => {
+        if (imgs.length) {
+          setArt(imgs[Math.floor(Math.random() * imgs.length)])
+        }
+      })
+      .catch(() => {})
+  }, [])
+
   return (
     <>
       <section className="hero">
         <div className="hero-stage">
-          <div className="hero-photo">
-            <div className="ph" />
-          </div>
-          <div className="wip-bar">
-            <div className="wip-track">
-              {Array.from({ length: 16 }, (_, i) => (
-                <span key={i}>{WIP}</span>
-              ))}
-            </div>
+          <div className="showcase">
+            <span className="showcase-label">NOW SHOWCASING:</span>
+            {art && (
+              <img
+                className="showcase-img"
+                src={imageUrl(art.url)}
+                alt={art.caption || 'featured fine art'}
+              />
+            )}
           </div>
           <div className="hero-bg">
             <div className="ph" />
@@ -50,36 +48,6 @@ export function Home() {
               Fly
             </p>
           </div>
-          {ANNOTATIONS.map((a, i) => (
-            <div
-              key={i}
-              className="annotation"
-              style={{ left: a.left, top: a.top }}
-            >
-              <div className="bar" style={{ width: a.barW }} />
-              <div
-                className={`box${a.solid ? ' solid' : ''}`}
-                style={{ width: a.boxW }}
-              >
-                <p>{a.text}</p>
-              </div>
-            </div>
-          ))}
-          <svg className="hero-lines">
-            {LINES.map((l, i) => (
-              <g key={i}>
-                <line
-                  x1={l.x1}
-                  y1={l.y1}
-                  x2={l.x2}
-                  y2={l.y2}
-                  stroke="currentColor"
-                  strokeWidth="1"
-                />
-                <circle cx={l.x2} cy={l.y2} r="2.67" fill="currentColor" />
-              </g>
-            ))}
-          </svg>
         </div>
       </section>
 
@@ -90,23 +58,15 @@ export function Home() {
           <br />
           FOR THE LOST
         </h1>
-        <div className="m-photo-wrap">
-          <div className="m-photo" />
-          <div className="wip-bar">
-            <div className="wip-track">
-              {Array.from({ length: 16 }, (_, i) => (
-                <span key={i}>{WIP}</span>
-              ))}
-            </div>
-          </div>
-        </div>
-        <div className="m-annotations">
-          {ANNOTATIONS.map((a, i) => (
-            <div key={i}>
-              <div className="bar" />
-              <div className="box">{a.text}</div>
-            </div>
-          ))}
+        <div className="showcase m-showcase">
+          <span className="showcase-label">NOW SHOWCASING:</span>
+          {art && (
+            <img
+              className="showcase-img"
+              src={imageUrl(art.url)}
+              alt={art.caption || 'featured fine art'}
+            />
+          )}
         </div>
         <p className="desc">
           The Higher You Soar The Smaller You Appear To Those Who Cannot Fly

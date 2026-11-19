@@ -47,6 +47,13 @@ CREATE TABLE IF NOT EXISTS timer (
 )
 """
 
+TEXT_OVERRIDES_SCHEMA = """
+CREATE TABLE IF NOT EXISTS text_overrides (
+    k VARCHAR(500) PRIMARY KEY,
+    v TEXT
+)
+"""
+
 COLUMNS = "id, ts, ip, user_agent, path, referrer, accept_language"
 
 
@@ -69,6 +76,7 @@ def init_db():
         cur.execute(IMAGES_SCHEMA)
         cur.execute(POSTS_SCHEMA)
         cur.execute(TIMER_SCHEMA)
+        cur.execute(TEXT_OVERRIDES_SCHEMA)
 
 
 def record_visit(ip, user_agent, path, referrer, accept_language):
@@ -194,3 +202,20 @@ def set_timer(label, started_at_ms):
 def clear_timer():
     with _connect() as conn, conn.cursor() as cur:
         cur.execute("DELETE FROM timer WHERE id = 1")
+
+
+def list_overrides():
+    with _connect() as conn, conn.cursor() as cur:
+        cur.execute("SELECT k, v FROM text_overrides")
+        return {r["k"]: r["v"] for r in cur.fetchall()}
+
+
+def set_overrides(overrides):
+    with _connect() as conn, conn.cursor() as cur:
+        cur.execute("DELETE FROM text_overrides")
+        for k, v in overrides.items():
+            cur.execute(
+                "INSERT INTO text_overrides (k, v) VALUES (%s, %s) "
+                "ON DUPLICATE KEY UPDATE v = VALUES(v)",
+                (k[:500], v),
+            )

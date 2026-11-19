@@ -1444,3 +1444,43 @@ main {
     justify-content: center;
   }
 }
+
+/* ---------- showcase ---------- */
+
+.showcase {
+  position: absolute;
+  z-index: 30;
+  left: 294px;
+  top: 75px;
+  width: 314px;
+  height: 341px;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--primary);
+}
+.showcase-label {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 1px;
+  color: var(--primary);
+  padding: 8px 10px 0;
+}
+.showcase-img {
+  flex: 1;
+  width: 100%;
+  min-height: 0;
+  object-fit: cover;
+}
+.edit-check {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--primary);
+  cursor: pointer;
+}
+body.edit-mode,
+body.edit-mode * {
+  cursor: crosshair !important;
+}

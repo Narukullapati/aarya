@@ -11,14 +11,36 @@ import { QuizPage } from './pages/QuizPage'
 import { PKMNPage } from './pages/PKMNPage'
 import { API_BASE } from './api'
 import { initTheme } from './theme'
+import { useEditMode } from './editmode'
+import { beginTextEdit, loadOverrides, startOverrideObserver } from './textedit'
 
 function Shell() {
   const location = useLocation()
   const [apiStatus, setApiStatus] = useState('checking…')
+  const editMode = useEditMode()
 
   useEffect(() => {
     initTheme()
+    loadOverrides()
+    startOverrideObserver()
   }, [])
+
+  useEffect(() => {
+    document.body.classList.toggle('edit-mode', editMode)
+    if (!editMode) return
+    const onDbl = (e: MouseEvent) => {
+      const t = e.target as HTMLElement | null
+      if (
+        !t ||
+        t.closest('input,textarea,select,a,button,[contenteditable="true"]')
+      )
+        return
+      e.preventDefault()
+      beginTextEdit(t)
+    }
+    document.addEventListener('dblclick', onDbl)
+    return () => document.removeEventListener('dblclick', onDbl)
+  }, [editMode])
 
   useEffect(() => {
     if (!API_BASE) {

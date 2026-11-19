@@ -32,6 +32,10 @@ export function clearEditToken() {
   sessionStorage.removeItem(TOKEN_KEY)
 }
 
+export function setEditToken(t: string) {
+  sessionStorage.setItem(TOKEN_KEY, t)
+}
+
 function editHeaders(): Record<string, string> {
   return { 'X-Edit-Token': getEditToken() }
 }
@@ -145,6 +149,23 @@ export async function stopTimer(): Promise<void> {
   const r = await fetch(`${API_BASE}/api/timer`, {
     method: 'DELETE',
     headers: editHeaders(),
+  })
+  await checkEdit(r)
+}
+
+export async function getTextOverrides(): Promise<Record<string, string>> {
+  const r = await fetch(`${API_BASE}/api/text`)
+  if (!r.ok) throw new Error(await detail(r))
+  return (await r.json()).overrides ?? {}
+}
+
+export async function saveTextOverrides(
+  overrides: Record<string, string>,
+): Promise<void> {
+  const r = await fetch(`${API_BASE}/api/text`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', ...editHeaders() },
+    body: JSON.stringify({ overrides }),
   })
   await checkEdit(r)
 }

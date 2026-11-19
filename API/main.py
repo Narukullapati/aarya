@@ -24,8 +24,10 @@ from db import (
     init_db,
     list_images,
     list_posts,
+    list_overrides,
     list_visits,
     record_visit,
+    set_overrides,
     set_timer,
 )
 
@@ -247,3 +249,26 @@ def start_timer(body: TimerIn, x_edit_token: str | None = Header(None)):
 def stop_timer(x_edit_token: str | None = Header(None)):
     _require_edit(x_edit_token)
     clear_timer()
+
+
+class TextOverridesIn(BaseModel):
+    overrides: dict[str, str]
+
+
+@app.get("/api/text")
+def text_overrides():
+    return {"overrides": list_overrides()}
+
+
+@app.put("/api/text")
+def put_text_overrides(
+    body: TextOverridesIn, x_edit_token: str | None = Header(None)
+):
+    _require_edit(x_edit_token)
+    overrides = {
+        k.strip()[:500]: v[:4000]
+        for k, v in body.overrides.items()
+        if k.strip()
+    }
+    set_overrides(overrides)
+    return {"overrides": overrides}
