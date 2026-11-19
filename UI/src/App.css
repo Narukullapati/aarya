@@ -1217,6 +1217,93 @@ main {
   margin: 4px 0;
 }
 
+/* ---------- pkmn imposter ---------- */
+
+.pkmn-setup {
+  border: 1px solid var(--primary);
+  padding: 16px;
+}
+.pkmn-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.pkmn-remove {
+  background: none;
+  border: none;
+  color: var(--primary);
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0 4px;
+  flex-shrink: 0;
+}
+.pkmn-remove:hover {
+  opacity: 0.6;
+}
+.imp-row .setting-label {
+  margin-bottom: 0;
+  width: 90px;
+  flex-shrink: 0;
+}
+.pkmn-imp-input {
+  width: 80px;
+}
+.pkmn-note {
+  margin-bottom: 16px;
+}
+.pkmn-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+  gap: 10px;
+  margin-bottom: 24px;
+}
+.pkmn-card {
+  border: 1px solid var(--primary);
+  background: none;
+  padding: 18px 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  font-family: var(--mono);
+}
+.pkmn-card.revealed {
+  cursor: default;
+}
+.pkmn-card.imp.revealed {
+  background: var(--primary);
+}
+.pkmn-name {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--primary);
+  opacity: 0.7;
+}
+.pkmn-img {
+  width: 88px;
+  height: 88px;
+}
+.pkmn-value {
+  font-size: 17px;
+  color: var(--primary);
+  text-align: center;
+}
+.pkmn-card.imp.revealed .pkmn-name {
+  color: var(--main);
+  opacity: 0.7;
+}
+.pkmn-card.imp.revealed .pkmn-value {
+  color: var(--main);
+  font-weight: 700;
+}
+.pkmn-card:hover:not(.revealed) {
+  background: color-mix(in srgb, var(--primary) 12%, transparent);
+}
+
 /* ---------- mobile ---------- */
 
 .hero-mobile {
@@ -1242,6 +1329,17 @@ main {
   }
   .hero-mobile .wip-track span {
     font-size: 20px;
+  }
+  .pkmn-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  .pkmn-card {
+    padding: 12px 8px;
+  }
+  .pkmn-img {
+    width: 64px;
+    height: 64px;
   }
   .hero-mobile .tag {
     font-family: var(--mono);

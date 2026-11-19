@@ -8,6 +8,7 @@ import { WorkPage } from './pages/WorkPage'
 import { TextPage } from './pages/TextPage'
 import { MiscPage } from './pages/MiscPage'
 import { QuizPage } from './pages/QuizPage'
+import { PKMNPage } from './pages/PKMNPage'
 import { API_BASE } from './api'
 import { initTheme } from './theme'
 
@@ -78,6 +79,7 @@ function Shell() {
             />
             <Route path="/misc" element={<MiscPage />} />
             <Route path="/quiz" element={<QuizPage />} />
+            <Route path="/pkmn" element={<PKMNPage />} />
             <Route path="*" element={<Home />} />
           </Routes>
         </main>

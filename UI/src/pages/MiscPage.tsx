@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { ColorPicker } from '../components/ColorPicker'
 import { QUIZ_PASSWORD } from './QuizPage'
 import { resetTheme, setGraphic, storedGraphic, type Graphic } from '../theme'
@@ -73,6 +73,13 @@ export function MiscPage() {
                 <button className="quiz-me-btn" onClick={quizMe}>
                   Quiz me!
                 </button>
+              </div>
+
+              <div className="setting">
+                <span className="setting-label">Game</span>
+                <Link className="quiz-me-btn" to="/pkmn">
+                  PKMN Imposter
+                </Link>
               </div>
             </div>
           </div>
