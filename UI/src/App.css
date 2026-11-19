@@ -1330,6 +1330,24 @@ main {
   .hero-mobile .wip-track span {
     font-size: 20px;
   }
+  .showcase {
+    position: relative;
+    left: auto;
+    top: auto;
+    width: 100%;
+    max-width: 420px;
+    width: 100%;
+    margin: 0 auto 24px;
+  }
+  .showcase-marquee {
+    padding: 10px 14px;
+  }
+  .showcase-label {
+    font-size: 26px;
+  }
+  .showcase-img {
+    margin-top: 10px;
+  }
   .pkmn-grid {
     grid-template-columns: 1fr 1fr;
     gap: 8px;
@@ -1450,26 +1468,83 @@ main {
 .showcase {
   position: absolute;
   z-index: 30;
-  left: 294px;
-  top: 75px;
-  width: 314px;
-  height: 341px;
+  left: 290px;
+  top: 45px;
+  width: 500px;
   display: flex;
   flex-direction: column;
+}
+.showcase-marquee {
+  position: relative;
+  background-color: color-mix(in srgb, var(--main) 80%, black);
+  background-image: repeating-linear-gradient(0deg,
+    transparent 0 14px,
+    color-mix(in srgb, var(--primary) 85%, white) 14px 17px,
+    transparent 17px 30px);
   border: 1px solid var(--primary);
+  border-radius: 14px;
+  padding: 14px 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .showcase-label {
-  font-family: var(--mono);
-  font-size: 12px;
-  letter-spacing: 1px;
+  font-family: "Limelight", serif;
+  font-size: 38px;
+  letter-spacing: 3px;
   color: var(--primary);
-  padding: 8px 10px 0;
+  white-space: nowrap;
+  text-shadow: 0 0 12px
+    color-mix(in srgb, var(--primary) 45%, transparent);
+}
+.showcase-label,
+.showcase-caption {
+  background-color: color-mix(in srgb, var(--main) 80%, black);
+  padding: 2px 10px;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
 }
 .showcase-img {
-  flex: 1;
   width: 100%;
-  min-height: 0;
+  aspect-ratio: 10 / 9;
   object-fit: cover;
+  border: 1px solid var(--primary);
+  border-radius: 14px;
+  margin-top: 14px;
+}
+.bulb {
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--primary);
+  opacity: 0.4;
+  transform: translate(-50%, -50%);
+  animation: bulb-breathe 2.6s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes bulb-breathe {
+  0%,
+  100% {
+    opacity: 1;
+    box-shadow: 0 0 5px 1px
+      color-mix(in srgb, var(--primary) 45%, transparent);
+  }
+  50% {
+    opacity: 0.4;
+    box-shadow: none;
+  }
+}
+.caption-marquee {
+  margin-top: 14px;
+  padding: 10px 22px;
+}
+.showcase-caption {
+  font-family: "Limelight", serif;
+  font-size: 22px;
+  letter-spacing: 1px;
+  color: var(--primary);
+  text-align: center;
 }
 .edit-check {
   display: flex;
